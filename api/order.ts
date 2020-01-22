@@ -1,24 +1,23 @@
-import { NowRequest, NowResponse } from '@now/node';
+import { NowResponse } from '@now/node';
 import * as t from 'io-ts';
 
-import { OrderInput } from './hasuraCustomTypes';
-import { handleBadRequest } from './handleBadRequest';
+import { handleBadRequest, PostRequest } from './handleBadRequest';
 
 // This could be genrated
-const OrderReqV = t.type({
+const OrderInputPayloadV = t.type({
   addressID: t.string,
   cartID: t.string,
   userID: t.string,
 });
 
-interface AddUserRequest extends NowRequest {
-  body: {
-    input: { payload: t.TypeOf<typeof OrderReqV> };
-  };
-}
+type AddUserRequest = PostRequest<typeof OrderInputPayloadV>;
 
 const handler = async (request: AddUserRequest, response: NowResponse) => {
-  handleBadRequest(OrderReqV, request.body.input.payload, response).then(() => {
+  handleBadRequest(
+    OrderInputPayloadV,
+    request.body.input.payload,
+    response,
+  ).then(() => {
     // some actions
 
     return response.json({

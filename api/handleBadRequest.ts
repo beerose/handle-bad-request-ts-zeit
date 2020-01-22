@@ -1,4 +1,4 @@
-import { NowResponse } from '@now/node';
+import { NowResponse, NowRequest } from '@now/node';
 import { fold } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { reporter } from 'io-ts-reporters';
@@ -21,4 +21,12 @@ export function handleBadRequest<Decoder extends t.Decoder<any, any>>(
       });
     }, resolve)(result);
   });
+}
+
+export interface PostRequest<BodyValidator extends t.Any> extends NowRequest {
+  body: {
+    input: {
+      payload: t.TypeOf<BodyValidator>;
+    };
+  };
 }
